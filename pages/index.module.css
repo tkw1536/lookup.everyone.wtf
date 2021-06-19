@@ -1,0 +1,33 @@
+.queryBox > :global(.window-body), .answerBox > :global(.window-body)  {
+    overflow: auto;
+}
+.answerBox > :global(.window-body) {
+    min-height: 500px;
+}
+.queryBox, .answerBox {
+    width: 95vw;
+
+    margin-left: auto;
+    margin-right: auto;
+    
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .queryBox, .answerBox {
+        width: 45vw;
+
+        margin-left: 2.5vw;
+        margin-right: 2.5vw;
+    }
+
+    .queryBox {
+        float: left;
+        margin-right: 0;
+    }
+    .answerBox {
+        float: right;
+        margin-left: 0;
+    }
+}
