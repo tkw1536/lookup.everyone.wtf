@@ -1,6 +1,7 @@
 import * as React from "react";
 import { QType, QTypes } from "../utils/qtypes";
 import { DOHQueryProps } from "./DOHQuery";
+import Dropdown from "./Dropdown";
 
 interface QueryInterfaceProps {
     onChange: (newProps: DOHQueryProps) => void;
@@ -50,7 +51,7 @@ export default class QueryInterface extends React.Component<QueryInterfaceProps,
                     </div>
                     <div className="field-row-stacked">
                         <label html-for="record">Record Type</label>
-                        <Select id="record-type" onChange={this.handleChangeType} value={type} values={QTypes}/>
+                        <Dropdown id="record-type" onChange={this.handleChangeType} value={type} values={QTypes}/>
                     </div>
                 </fieldset>
                 <fieldset>
@@ -65,21 +66,5 @@ export default class QueryInterface extends React.Component<QueryInterfaceProps,
                     <label>Press this button to submit the query</label>
                 </section>
         </form>);
-    }
-}
-
-interface SelectProps {
-    id?: string
-    value: string;
-    values: readonly string[];
-    onChange?: React.EventHandler<React.ChangeEvent<HTMLSelectElement>>;
-}
-
-class Select extends React.Component<SelectProps> {
-    render() {
-        const { value, values, id, onChange } = this.props; 
-        return <select value={value} id={id} onChange={onChange}>
-            {values.map(v => <option value={v} key={v}>{v}</option>)}
-        </select>
     }
 }
