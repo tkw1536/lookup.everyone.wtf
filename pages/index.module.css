@@ -16,17 +16,17 @@
 
 @media (min-width: 768px) {
     .queryBox, .answerBox {
-        width: 45vw;
-
         margin-left: 2.5vw;
         margin-right: 2.5vw;
     }
 
     .queryBox {
+        width: 25vw;
         float: left;
         margin-right: 0;
     }
     .answerBox {
+        width: 65vw;
         float: right;
         margin-left: 0;
     }

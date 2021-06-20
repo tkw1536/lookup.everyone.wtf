@@ -7,3 +7,10 @@
     border: 1px solid black;
     vertical-align: middle;
 }
+
+th.preference {
+    min-width: 3ch;
+}
+td.preference {
+    text-align: right;
+}

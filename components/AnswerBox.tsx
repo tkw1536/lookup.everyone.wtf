@@ -222,21 +222,85 @@ class AnswerDisplay extends React.Component<{ answer: Answer }>{
     const { answer: { type, name, ttl, data, ...rest } } = this.props;
     let clz = hasOwnProperty(rest, "class") ? rest.class as string : "";
 
-    let dataNode: React.ReactChild;
-    if (typeof data === "string") { // string
-      dataNode = <Copyable>{data}</Copyable>;
-    } else if (data instanceof Buffer) { // Buffer
-      dataNode = <Copyable>{data.toString()}</Copyable>;
-    } else {
-      dataNode = <Copyable>{JSON.stringify(data)}</Copyable>
-    }
-
     return <tr>
       <td>{type}</td>
       <td>{clz}</td>
       <td><Copyable>{name}</Copyable></td>
-      <td>{ttl}</td>
-      <td>{dataNode}</td>
+      <td>{ttl !== undefined && <TTLDisplay ttl={ttl} />}</td>
+      <td><DataDisplay data={data} /></td>
     </tr>;
+  }
+}
+
+class TTLDisplay extends React.Component<{ ttl: number }> {
+  render() {
+    const { ttl } = this.props;
+
+    let seconds = ttl;
+    let minutes = Math.floor(seconds / 60);
+    seconds %= 60;
+    let hours = Math.floor(minutes / 60);
+    minutes %= 60;
+    let days = Math.floor(hours / 24);
+    days %= 48;
+
+    const hasDays = days > 0;
+    const hasHours = hasDays || hours > 0;
+    const hasMinutes = hasHours || minutes > 0;
+    const hasSeconds = seconds > 0;
+
+    return <p>
+      <code>{ttl}</code>
+      {" "} = {" "}
+      <code>
+        {hasDays && <>{days} Day{days != 1 && "s"} </>}
+        {hasHours && <>{hours} Hour{hours != 1 && "s"} </>}
+        {hasMinutes && <>{minutes} Minute{minutes != 1 && "s"} </>}
+        {hasSeconds && <>{seconds} Second{seconds != 1 && "s"} </>}
+      </code>
+    </p>
+  }
+}
+
+class DataDisplay extends React.Component<{ data: any }> {
+  render() {
+    const { data } = this.props;
+    console.log(data);
+
+    switch (true) {
+      // regular Array => render recursively
+      case Array.isArray(data):
+        return data.map((d, i) => <p key={i}><DataDisplay data={d} /></p>);
+
+      // Uint8Array || Buffer => render data directly
+      case data instanceof Uint8Array || data instanceof Buffer:
+        const value = String.fromCharCode.apply(String, Array.from(data));
+        return <Copyable>{value}</Copyable>;
+
+      // Plain Record
+      case typeof data === "string":
+        return <Copyable>{data}</Copyable>;
+
+      // MX record
+      case hasOwnProperty(data, "exchange") && hasOwnProperty(data, "preference"):
+        const { exchange, preference } = data;
+        return <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Exchange</th>
+              <th className={styles.preference}>Preference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><Copyable>{exchange as string}</Copyable></td>
+              <td className={styles.preference}>{preference}</td>
+            </tr>
+          </tbody>
+        </table>;
+    }
+
+    // Fallback
+    return <code>{JSON.stringify(data)}</code>
   }
 }
