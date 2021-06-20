@@ -132,13 +132,16 @@ class PacketDisplay extends React.Component<PacketDisplayProps, PacketDisplaySta
   }
   render() {
     const { packet } = this.props;
-    const { questions, answers, additionals, authorities } = packet;
+    const { questions, answers, additionals, authorities, ...rest } = packet;
     const { activeIndex } = this.state;
-    
+
     const tabs: Array<{ title: string; child?: React.ReactChild }> = [
       {
         title: "Answers",
-        child: <AnswersDisplay answers={answers || []} />
+        child: <>
+          <p>Status: <code>{hasOwnProperty(rest, "rcode") ? rest.rcode as string : "UNKNOWN"}</code></p>
+          <AnswersDisplay answers={answers || []} />
+        </>
       },
       {
         title: "Additionals",
@@ -168,7 +171,7 @@ interface QuestionsProps {
 
 class QuestionsDisplay extends React.Component<QuestionsProps> {
   render() {
-    const { questions } = this.props; 
+    const { questions } = this.props;
     return <table className={styles.table}>
       <thead>
         <tr>
@@ -177,7 +180,7 @@ class QuestionsDisplay extends React.Component<QuestionsProps> {
         </tr>
       </thead>
       <tbody>
-        { questions.map((q, i) => <tr key={i}>
+        {questions.map((q, i) => <tr key={i}>
           <td>{q.type}</td>
           <td><Copyable>{q.name}</Copyable></td>
         </tr>)}
@@ -192,7 +195,7 @@ interface AnswersProps {
 
 class AnswersDisplay extends React.Component<AnswersProps> {
   render() {
-    const { answers } = this.props; 
+    const { answers } = this.props;
     return <table className={styles.table}>
       <thead>
         <tr>
@@ -204,7 +207,7 @@ class AnswersDisplay extends React.Component<AnswersProps> {
         </tr>
       </thead>
       <tbody>
-        { answers.map((a, i) => <AnswerDisplay key={i} answer={a} />)}
+        {answers.map((a, i) => <AnswerDisplay key={i} answer={a} />)}
       </tbody>
     </table>
   }
@@ -214,16 +217,26 @@ function hasOwnProperty<O extends {}, K extends PropertyKey>(obj: O, prop: K): o
   return obj.hasOwnProperty(prop);
 }
 
-class AnswerDisplay extends React.Component<{answer: Answer}>{
+class AnswerDisplay extends React.Component<{ answer: Answer }>{
   render() {
     const { answer: { type, name, ttl, data, ...rest } } = this.props;
     let clz = hasOwnProperty(rest, "class") ? rest.class as string : "";
+
+    let dataNode: React.ReactChild;
+    if (typeof data === "string") { // string
+      dataNode = <Copyable>{data}</Copyable>;
+    } else if (data instanceof Buffer) { // Buffer
+      dataNode = <Copyable>{data.toString()}</Copyable>;
+    } else {
+      dataNode = <Copyable>{JSON.stringify(data)}</Copyable>
+    }
+
     return <tr>
       <td>{type}</td>
       <td>{clz}</td>
       <td><Copyable>{name}</Copyable></td>
       <td>{ttl}</td>
-      <td><Copyable>{JSON.stringify(data)}</Copyable></td>
+      <td>{dataNode}</td>
     </tr>;
   }
 }
