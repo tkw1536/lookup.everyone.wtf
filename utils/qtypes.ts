@@ -93,3 +93,5 @@ export enum QType {
     MAILA = 'MAILA',
     DOA = 'DOA',
 }
+
+export const QTypes = Object.freeze(Object.keys(QType).sort());
