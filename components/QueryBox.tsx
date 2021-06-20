@@ -1,14 +1,14 @@
 import * as React from "react";
 import { QType, QTypes } from "../utils/qtypes";
-import { DOHQueryProps } from "./DOHQuery";
-import Dropdown from "./Dropdown";
+import { DOHQuery } from "./AnswerBox";
+import Dropdown from "./design/Dropdown";
 
-interface QueryInterfaceProps {
-    onChange: (newProps: DOHQueryProps) => void;
+interface QueryBoxProps {
+    onChange: (newProps: DOHQuery) => void;
 }
 
-export default class QueryInterface extends React.Component<QueryInterfaceProps, DOHQueryProps> {
-    state: DOHQueryProps = {
+export default class QueryBox extends React.Component<QueryBoxProps, DOHQuery> {
+    state: DOHQuery = {
         nameserver: "https://1.1.1.1/dns-query",
         domain: "example.com",
         type: QType.A,

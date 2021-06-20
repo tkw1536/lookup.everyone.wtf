@@ -1,0 +1,5 @@
+a.overlay {
+    float: right;
+    text-align: right;
+    width: 6ch; /* "copied" == 6ch */
+}
