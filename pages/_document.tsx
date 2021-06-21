@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
           <footer>
             Powered by <a href="https://nextjs.org/" rel="noopener noreferrer" target="_blank">Next.JS</a>, <a href="https://dohjs.org/" rel="noopener noreferrer" target="_blank">DoH.js</a> and <a href="https://khang-nd.github.io/7.css/" rel="noopener noreferrer" target="_blank">7.css</a>.{` `}
             {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-            <script src="https://inform.everyone.wtf/legal.min.js?dark"></script>
+            <script src="https://inform.everyone.wtf/legal.min.js?dark" data-site-id="02cd4f2a-c21e-4327-b52e-8be066179d14"></script>
           </footer>
         </body>
       </Html>
