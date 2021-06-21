@@ -15,3 +15,8 @@ footer {
         bottom: 10px;
     }
 }
+
+/* fix for Safari */
+input[type=email], input[type=number], input[type=password], input[type=text] {
+    line-height: normal !important;
+}
