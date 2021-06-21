@@ -265,7 +265,6 @@ class TTLDisplay extends React.Component<{ ttl: number }> {
 class DataDisplay extends React.Component<{ data: any }> {
   render() {
     const { data } = this.props;
-    console.log(data);
 
     switch (true) {
       // regular Array => render recursively

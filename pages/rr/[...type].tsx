@@ -18,29 +18,40 @@ interface RRPageState {
 }
 
 interface RRPageProps {
-    qtype: QType;
-    router: Router;
+  qtype: QType;
+  router: Router;
 }
 
 class RRPage extends React.Component<RRPageProps, RRPageState> {
   state: RRPageState = {
     counter: 0,
     queryState: {
-        nameserver: "https://1.1.1.1/dns-query",
-        domain: "example.com",
-        type: this.props.qtype,
+      nameserver: "https://1.1.1.1/dns-query",
+      domain: "example.com",
+      type: this.props.qtype,
     },
-  }
-
-  private onChange = (query: DOHQuery, prev: DOHQuery) => {
-      if (query.type != prev.type) {
-        this.props.router.push(`/rr/${query.type}`);
-      }
-      this.setState({ queryState: query });
   }
 
   private onSubmit = () => {
     this.setState(({ counter, queryState }) => ({ answerState: queryState, counter: 1 - counter }));
+  }
+
+  private onChange = (q: Partial<DOHQuery>, prev?: DOHQuery) => {
+    const prevQ = prev ?? this.state.queryState;
+    const newQ = { ...prevQ, ...q };
+
+    this.setState({ queryState: newQ }, () => {
+      if (newQ.type != prevQ.type) {
+        this.props.router.push(`/rr/${newQ.type}`);
+      }
+    });
+  }
+
+  componentDidUpdate(prevProps: RRPageProps) {
+    const { qtype } = this.props;
+    if (prevProps.qtype != this.props.qtype) {
+      this.onChange({ type: qtype });
+    }
   }
 
   render() {
@@ -63,18 +74,18 @@ class RRPage extends React.Component<RRPageProps, RRPageState> {
 export default withRouter(RRPage);
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const qtype = (context.params!.type as string[]).join("/");
-    return {
-        props: {
-            qtype,
-        }
-    };
+  const qtype = (context.params!.type as string[]).join("/");
+  return {
+    props: {
+      qtype,
+    }
+  };
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const classes = QTypes.map(c => ({ params: { type: c.split("/") } }));
-    return {
-        paths: classes,
-        fallback: false,
-    };
+  const classes = QTypes.map(c => ({ params: { type: c.split("/") } }));
+  return {
+    paths: classes,
+    fallback: false,
+  };
 }
