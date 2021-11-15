@@ -9,6 +9,7 @@ import Window from "../../components/design/Window";
 import QueryBox from "../../components/QueryBox";
 import { QType, QTypes } from "../../utils/qtypes";
 import styles from "./[...type].module.css";
+import ButtonLink from "../../components/design/ButtonLink";
 
 
 interface RRPageState {
@@ -64,8 +65,17 @@ class RRPage extends React.Component<RRPageProps, RRPageState> {
       <Window glass title="DNS Query" className={styles.queryBox}>
         <QueryBox onChange={this.onChange} onSubmit={this.onSubmit} query={queryState} />
       </Window>
+
       <Window glass title="Answer" className={styles.answerBox}>
         {answerState ? <AnswerBox {...answerState} forceReload={counter} /> : <EmptyAnswerBox />}
+      </Window>
+
+      <Window glass title="Public Cache Purger Links" className={styles.queryBox}>
+      <section className="field-row">
+        <ButtonLink href="https://cloudflare-dns.com/purge-cache/">CloudFlare</ButtonLink>
+        <ButtonLink href="https://developers.google.com/speed/public-dns/cache">Google DNS</ButtonLink>
+        <ButtonLink href="https://cachecheck.opendns.com/">OpenDNS</ButtonLink>
+        </section>
       </Window>
     </>;
   }
