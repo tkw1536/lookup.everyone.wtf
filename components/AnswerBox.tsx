@@ -24,7 +24,7 @@ interface AnswerBoxProps extends DOHQuery {
 interface DOHQueryState {
   loading: boolean;
   error?: string;
-  result?: Packet;
+  result?: EPacket;
 }
 
 export default class AnswerBox extends React.Component<DOHQuery & AnswerBoxProps, DOHQueryState>{
@@ -56,10 +56,10 @@ export default class AnswerBox extends React.Component<DOHQuery & AnswerBoxProps
 
     // make the query
     const { nameserver, domain, type } = this.props;
-    let result: Packet | undefined = undefined;
+    let result: EPacket | undefined = undefined;
     let error: string | undefined;
     try {
-      result = await (new DohResolver(nameserver)).query(domain, type);
+      result = await (new DohResolver(nameserver)).query(domain, type) as EPacket;
     } catch (e) {
       error = e.toString();
     }
@@ -115,8 +115,13 @@ export class EmptyAnswerBox extends React.Component {
   }
 }
 
+type EPacket = Packet & {
+  answers: EAnswer[] | undefined;
+  additionals: EAnswer[] | undefined;
+  authorities: EAnswer[] | undefined;
+}
 interface PacketDisplayProps {
-  packet: Packet;
+  packet: EPacket;
 }
 
 interface PacketDisplayState {
@@ -190,7 +195,7 @@ class QuestionsDisplay extends React.Component<QuestionsProps> {
 }
 
 interface AnswersProps {
-  answers: Answer[];
+  answers: EAnswer[];
 }
 
 class AnswersDisplay extends React.Component<AnswersProps> {
@@ -217,7 +222,12 @@ function hasOwnProperty<O extends {}, K extends PropertyKey>(obj: O, prop: K): o
   return obj.hasOwnProperty(prop);
 }
 
-class AnswerDisplay extends React.Component<{ answer: Answer }>{
+type EAnswer = Answer & {
+  ttl?: number;
+  data: any
+}
+
+class AnswerDisplay extends React.Component<{ answer: EAnswer }>{
   render() {
     const { answer: { type, name, ttl, data, ...rest } } = this.props;
     let clz = hasOwnProperty(rest, "class") ? rest.class as string : "";
