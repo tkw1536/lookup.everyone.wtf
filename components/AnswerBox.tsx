@@ -140,7 +140,7 @@ class PacketDisplay extends React.Component<PacketDisplayProps, PacketDisplaySta
     const { questions, answers, additionals, authorities, ...rest } = packet;
     const { activeIndex } = this.state;
 
-    const tabs: Array<{ title: string; child?: React.ReactChild }> = [
+    const tabs: Array<{ title: string; child?: React.ReactNode }> = [
       {
         title: "Answers",
         child: <>

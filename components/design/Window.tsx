@@ -1,10 +1,11 @@
 import * as React from "react";
 
 interface WindowProps {
-    title?: React.ReactChild;
+    title?: React.ReactNode;
 
     glass?: boolean;
     className?: string;
+    children?: React.ReactNode;
 }
 
 export default class Window extends React.Component<WindowProps> {

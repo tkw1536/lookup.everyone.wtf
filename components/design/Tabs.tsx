@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface TabsProps {
-    children: Array<{ title: string; child?: React.ReactChild }>;
+    children: Array<{ title: string; child?: React.ReactNode }>;
     activeIndex: number;
     onChange: (index: number) => void;
 }
